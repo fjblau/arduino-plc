@@ -6,7 +6,7 @@ const int OPTA_SIGNAL = 23;
 const int THRESHOLD_CM = 5;
 
 const int SERVO_PIN = 15;
-const int MAX_DISTANCE = 50;
+const int MAX_DISTANCE = 20;
 
 Servo myServo;
 
