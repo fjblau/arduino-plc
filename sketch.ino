@@ -1,17 +1,14 @@
-#include <Wire.h>
-#include <Adafruit_PWMServoDriver.h>
+#include <ESP32Servo.h>
 
 const int TRIG_PIN = 13;
 const int ECHO_PIN = 14;
 const int OPTA_SIGNAL = 23;
 const int THRESHOLD_CM = 5;
 
-const int SERVO_CHANNEL = 0;
-const int SERVO_MIN_PULSE = 150;
-const int SERVO_MAX_PULSE = 600;
+const int SERVO_PIN = 15;
 const int MAX_DISTANCE = 50;
 
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
+Servo myServo;
 
 void setup() {
   pinMode(TRIG_PIN, OUTPUT);
@@ -19,11 +16,9 @@ void setup() {
   pinMode(OPTA_SIGNAL, OUTPUT);
   Serial.begin(9600);
   
-  Wire.begin();
-  pwm.begin();
-  pwm.setPWMFreq(50);
+  myServo.attach(SERVO_PIN);
   
-  Serial.println("PWM board initialized");
+  Serial.println("Servo initialized on pin 15");
 }
 
 void loop() {
@@ -39,8 +34,7 @@ void loop() {
   digitalWrite(OPTA_SIGNAL, (distance > 0 && distance < THRESHOLD_CM));
   
   int servoAngle = map(constrain(distance, 0, MAX_DISTANCE), 0, MAX_DISTANCE, 180, 0);
-  int pulselen = map(servoAngle, 0, 180, SERVO_MIN_PULSE, SERVO_MAX_PULSE);
-  pwm.setPWM(SERVO_CHANNEL, 0, pulselen);
+  myServo.write(servoAngle);
   
   Serial.print("Distance: ");
   Serial.print(distance);
